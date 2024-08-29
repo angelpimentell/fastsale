@@ -1,0 +1,14 @@
+services:
+  sale-web:
+    build:
+      context: .
+      dockerfile: ./DockerfileSale
+    ports:
+      - "80:5001"
+
+  sale-stock:
+    build:
+      context: .
+      dockerfile: ./DockerfileStock
+    ports:
+      - "8081:5000"

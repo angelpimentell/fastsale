@@ -1,0 +1,15 @@
+FROM python:3.9.0-slim-buster
+
+WORKDIR /usr/src/app
+
+COPY stock/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY stock/ .
+
+RUN if [ ! -f "app.db" ]; then flask db init; fi
+RUN flask db migrate -m "Initial migration."
+RUN flask db upgrade
+
+
+CMD [ "python", "app.py" ]
