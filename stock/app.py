@@ -35,6 +35,18 @@ def read_products():
     return jsonify([{"id": product.id, "name": product.name, "price": product.price} for product in products])
 
 
+@app.route('/product/<int:product_id>', methods=['GET'])
+def delete_product(product_id):
+    # Obtener el producto por su ID
+    product = Product.query.get_or_404(product_id)
+
+    # Eliminar el producto de la base de datos
+    db.session.delete(product)
+    db.session.commit()
+
+    # Redirigir a la lista de productos
+    return redirect(url_for('index'))
+
 @app.route('/', methods=['GET'])
 def index():
     products = Product.query.all()
