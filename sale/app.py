@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # URL de la API
-API_URL = "http://localhost:5000/products"
+API_URL = "http://localhost:8081/products"
 
 
 @app.route('/')
@@ -26,4 +26,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, host="0.0.0.0", port=5001)
