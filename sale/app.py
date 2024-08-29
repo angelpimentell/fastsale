@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # URL de la API
-API_URL = "http://localhost:8081/products"
+API_URL = "http://host.docker.internal:8081/products"
 
 
 @app.route('/')
