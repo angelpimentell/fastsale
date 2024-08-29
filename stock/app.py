@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_migrate import Migrate
 from config import Config
 from models import db, Product
@@ -10,27 +10,35 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-@app.route('/products', methods=['POST'])
+@app.route('/products/create', methods=['GET', 'POST'])
 def create_product():
-    data = request.json
-    name = data.get('name')
-    price = data.get('price')
+    if request.method == 'POST':
 
-    if not name or not price:
-        return jsonify({"error": "Incomplete data"}), 400
+        name = request.form['name']
+        price = float(request.form['price'])
 
-    new_product = Product(name=name, price=price)
-    db.session.add(new_product)
-    db.session.commit()
+        if not name or not price:
+            return jsonify({"error": "Incomplete data"}), 400
 
-    return jsonify({"message": "Product created",
-                    "product": {"id": new_product.id, "name": new_product.name, "price": new_product.price}}), 201
+        new_product = Product(name=name, price=price)
+        db.session.add(new_product)
+        db.session.commit()
+
+        return redirect('/')
+
+    return render_template('create-product.html')
 
 
 @app.route('/products', methods=['GET'])
-def get_products():
+def read_products():
     products = Product.query.all()
     return jsonify([{"id": product.id, "name": product.name, "price": product.price} for product in products])
+
+
+@app.route('/', methods=['GET'])
+def index():
+    products = Product.query.all()
+    return render_template('index.html', products=products)
 
 
 if __name__ == '__main__':
